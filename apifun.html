@@ -21,6 +21,27 @@
         }
     </style>
 	<script>
+        window.onload = function() {
+            fetchData();
+            getData();
+        }
+        async function fetchData() {
+            let response = await fetch("https://api.sunrise-sunset.org/json?lat=42.3601&lng=71.0589&date=2022-03-14");
+            let data = await response.json();
+            
+            if (response.status == 200) {
+                display = "Sunrise: " 
+                        + data["results"].sunrise + "<br/>Sunset: "
+                        + data["results"].sunset + "<br/>Day length: "
+                        + data["results"].day_length + "<br/>Twilight Start: "
+                        + data["results"].civil_twilight_begin
+                        + "<br/>Twilight End: " + data["results"].civil_twilight_end; 
+                document.getElementById("data2").innerHTML = display;
+            } else {
+                document.getElementById("data").innerHTML = "Something went wrong!  Try again";
+            }
+        }
+
 		function getData() {
 			/* Step 1: Make instance of request object...
 			...to make HTTP request after page is loaded*/
@@ -43,7 +64,6 @@
 					// Step 5: wait for done + success
 					console.log("5 - response received");
 					result = request.responseText;
-					//alert(result);
 					data = JSON.parse(result);
 					
                     display = "Sunrise: " 
@@ -71,7 +91,8 @@
 </head>
 
 
-<body onload="getData()">
+<!-- <body onload="getData()"> -->
+<body>
 
 	<h1>Sunrise and Sunset</h1>
     <p id="intro">This draws data from a sunrise and sunset API, displaying the sunset
@@ -79,7 +100,12 @@
         This represents the data for <br/>Boston (latitude 42.3601, 
         longitude 71.0589) on March 14, 2022.
     </p>
+    
+    <strong>AJAX Call: </strong><br/>
 	<div id="data">Loading...</div>
+    <br/>
+    <strong>Fetch Data: </strong><br/>
+    <div id="data2">Loading...</div>
     <br/>
     <div>
         <p>For this assignment, I requested information with latitude, longitude,
